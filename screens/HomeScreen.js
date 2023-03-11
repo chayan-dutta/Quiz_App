@@ -22,9 +22,7 @@ export default function HomeScreen({ navigation }) {
   }
 
   function getStarted() {
-    navigation.navigate("Categories", {
-      participatorName: enteredNameCtx.name,
-    });
+    navigation.navigate("Categories");
   }
 
   return (
