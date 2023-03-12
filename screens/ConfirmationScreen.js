@@ -1,13 +1,12 @@
 import { Alert, StyleSheet, Text, View } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { Dropdown } from "react-native-element-dropdown";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import axios from "axios";
 
 import Button from "../components/Button";
-import {
-  checkInternetConnection,
-  FetchAPI,
-} from "../util/QuizQutionsOrganizer";
+import { checkInternetConnection } from "../util/QuizQutionsOrganizer";
+import { participatorName } from "../store/name-context";
 
 const dropdownData = [
   { label: "5 Questions", value: 5 },
@@ -19,6 +18,7 @@ const dropdownData = [
 
 export default function ConfirmationScreen({ navigation, route }) {
   const [selectedNoOfQuestion, setSelectedNoOfQuestion] = useState(null);
+  const ctx = useContext(participatorName);
 
   const selectedCategoryName = route.params.selectedCategory.name;
   const selectedCategoryValue = route.params.selectedCategory.value;
@@ -43,6 +43,11 @@ export default function ConfirmationScreen({ navigation, route }) {
     if (networkState) {
       if (networkState.isConnected && networkState.isInternetReachable) {
         FetchAPI(selectedCategoryValue, selectedNoOfQuestion);
+        setTimeout(() => {
+          navigation.navigate("QuizScreen", {
+            selectedNoOfQuestions: selectedNoOfQuestion,
+          });
+        }, 3000);
       } else {
         Alert.alert(
           "Oops! Something went wrong.",
@@ -52,6 +57,13 @@ export default function ConfirmationScreen({ navigation, route }) {
     } else {
       return;
     }
+  }
+
+  function FetchAPI(categoryValue, noOfQuestion) {
+    const url = `https://opentdb.com/api.php?amount=${noOfQuestion}&category=${categoryValue}&difficulty=easy&type=multiple`;
+    axios.get(url, { responseType: "json" }).then((response) => {
+      ctx.setAllQuestions(JSON.parse(JSON.stringify(response.data)));
+    });
   }
 
   return (

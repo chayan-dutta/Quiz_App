@@ -1,6 +1,5 @@
 import * as Network from "expo-network";
 import { Alert } from "react-native";
-import axios from "axios";
 
 export async function checkInternetConnection() {
   const airplaneModeEnabled = await Network.isAirplaneModeEnabledAsync();
@@ -16,9 +15,19 @@ export async function checkInternetConnection() {
   }
 }
 
-export function FetchAPI(categoryValue, noOfQuestion) {
-  const url = `https://opentdb.com/api.php?amount=${noOfQuestion}&category=${categoryValue}&difficulty=easy&type=multiple`;
-  axios.get(url).then((response) => {
-    console.log(response);
-  });
+export function shuffle(array) {
+  let currentIndex = array.length,
+    randomIndex;
+  // While there remain elements to shuffle.
+  while (currentIndex != 0) {
+    // Pick a remaining element.
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex--;
+    // And swap it with the current element.
+    [array[currentIndex], array[randomIndex]] = [
+      array[randomIndex],
+      array[currentIndex],
+    ];
+  }
+  return array;
 }
