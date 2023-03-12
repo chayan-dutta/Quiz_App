@@ -1,7 +1,8 @@
 class Category {
-  constructor(id, title) {
+  constructor(id, title, valueInAPI) {
     this.id = id;
     this.title = title;
+    this.valueInAPI = valueInAPI;
   }
 }
 

@@ -12,7 +12,11 @@ export default function CategoriesScreen({ navigation }) {
   function renderCategoryList(itemData) {
     function categorySelected() {
       navigation.navigate("Confirmation", {
-        selectedCategory: { id: itemData.item.id, name: itemData.item.title },
+        selectedCategory: {
+          id: itemData.item.id,
+          name: itemData.item.title,
+          value: itemData.item.valueInAPI,
+        },
       });
     }
     return (

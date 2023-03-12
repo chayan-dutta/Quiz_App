@@ -4,6 +4,10 @@ import { Dropdown } from "react-native-element-dropdown";
 import { useState } from "react";
 
 import Button from "../components/Button";
+import {
+  checkInternetConnection,
+  FetchAPI,
+} from "../util/QuizQutionsOrganizer";
 
 const dropdownData = [
   { label: "5 Questions", value: 5 },
@@ -13,10 +17,11 @@ const dropdownData = [
   { label: "25 Questions", value: 25 },
 ];
 
-export default function ConfirmationScreen({ route }) {
-  const [dropdown, setDropdown] = useState(null);
+export default function ConfirmationScreen({ navigation, route }) {
+  const [selectedNoOfQuestion, setSelectedNoOfQuestion] = useState(null);
 
   const selectedCategoryName = route.params.selectedCategory.name;
+  const selectedCategoryValue = route.params.selectedCategory.value;
 
   const renderDropdownItem = (item) => {
     return (
@@ -26,15 +31,27 @@ export default function ConfirmationScreen({ route }) {
     );
   };
 
-  function onConfirm() {
-    if (dropdown == null) {
+  async function onConfirm() {
+    if (selectedNoOfQuestion == null) {
       Alert.alert(
         "Select No. of Questions",
         "Please select how many questions you want to play."
       );
       return;
     }
-    console.log("Confirmed:", dropdown);
+    const networkState = await checkInternetConnection();
+    if (networkState) {
+      if (networkState.isConnected && networkState.isInternetReachable) {
+        FetchAPI(selectedCategoryValue, selectedNoOfQuestion);
+      } else {
+        Alert.alert(
+          "Oops! Something went wrong.",
+          "Please check your internet connection and try again"
+        );
+      }
+    } else {
+      return;
+    }
   }
 
   return (
@@ -59,15 +76,17 @@ export default function ConfirmationScreen({ route }) {
         placeholder="Select No. of Questions"
         placeholderStyle={styles.placeholderStyle}
         onChange={(item) => {
-          setDropdown(item.value);
+          setSelectedNoOfQuestion(item.value);
         }}
         renderItem={(item) => renderDropdownItem(item)}
       />
       <View style={styles.noteWindow}>
         <Button text="Confirm" onTapped={onConfirm} />
+        <Text style={styles.noteTextStarTop}>**</Text>
         <Text style={styles.noteText}>
-          **You will get 10 seconds on each question**
+          You will get 10 seconds on each question
         </Text>
+        <Text style={styles.noteTextStarBottom}>**</Text>
       </View>
     </LinearGradient>
   );
@@ -150,6 +169,21 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontWeight: "bold",
     fontSize: 20,
+    marginTop: 10,
+    marginBottom: 10,
+    textAlign: "center",
+  },
+  noteTextStarTop: {
+    color: "#fff",
+    fontWeight: "bold",
+    fontSize: 30,
     marginTop: 50,
+    textAlign: "center",
+  },
+  noteTextStarBottom: {
+    color: "#fff",
+    fontWeight: "bold",
+    fontSize: 30,
+    textAlign: "center",
   },
 });
