@@ -6,6 +6,7 @@ import CategoriesScreen from "./screens/CategoriesScreens";
 import ConfirmationScreen from "./screens/ConfirmationScreen";
 import HomeScreen from "./screens/HomeScreen";
 import QuizScreen from "./screens/QuizScreen";
+import ScoreAndCertificateScreen from "./screens/ScoreAndCertificateScreen";
 import NameContextProvider from "./store/name-context";
 
 const Stack = createNativeStackNavigator();
@@ -46,6 +47,11 @@ export default function App() {
             <Stack.Screen
               name="QuizScreen"
               component={QuizScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="CertificateScreen"
+              component={ScoreAndCertificateScreen}
               options={{ headerShown: false }}
             />
           </Stack.Navigator>

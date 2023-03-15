@@ -3,6 +3,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { Dropdown } from "react-native-element-dropdown";
 import { useContext, useState } from "react";
 import axios from "axios";
+import ProgressLoader from "rn-progress-loader";
 
 import Button from "../components/Button";
 import { checkInternetConnection } from "../util/QuizQutionsOrganizer";
@@ -18,6 +19,8 @@ const dropdownData = [
 
 export default function ConfirmationScreen({ navigation, route }) {
   const [selectedNoOfQuestion, setSelectedNoOfQuestion] = useState(null);
+  const [modalVisibility, setModalVisibility] = useState(false);
+
   const ctx = useContext(participatorName);
 
   const selectedCategoryName = route.params.selectedCategory.name;
@@ -42,6 +45,7 @@ export default function ConfirmationScreen({ navigation, route }) {
     const networkState = await checkInternetConnection();
     if (networkState) {
       if (networkState.isConnected && networkState.isInternetReachable) {
+        setModalVisibility(true);
         FetchAPI(selectedCategoryValue, selectedNoOfQuestion);
         setTimeout(() => {
           navigation.navigate("QuizScreen", {
@@ -93,12 +97,21 @@ export default function ConfirmationScreen({ navigation, route }) {
         renderItem={(item) => renderDropdownItem(item)}
       />
       <View style={styles.noteWindow}>
-        <Button text="Confirm" onTapped={onConfirm} />
+        <Button text="Start" onTapped={onConfirm} />
         <Text style={styles.noteTextStarTop}>**</Text>
         <Text style={styles.noteText}>
           You will get 10 seconds on each question
         </Text>
         <Text style={styles.noteTextStarBottom}>**</Text>
+      </View>
+      <View style={styles.loadingContainer}>
+        <ProgressLoader
+          visible={modalVisibility}
+          isModal={true}
+          isHUD={true}
+          hudColor={"#3C0155"}
+          color={"#FFFFFF"}
+        />
       </View>
     </LinearGradient>
   );
@@ -197,5 +210,10 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 30,
     textAlign: "center",
+  },
+  loadingContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+    flex: 1,
   },
 });

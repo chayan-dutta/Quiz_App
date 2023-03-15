@@ -5,11 +5,14 @@ export const participatorName = createContext({
   getEnteredname: (enteredName) => {},
   allQuestions: [],
   setAllQuestions: (responseFromAPI) => {},
+  score: 0,
+  setTotalScore: (score, totalNoOfQuestion) => {},
 });
 
 export default function NameContextProvider({ children }) {
   const [name, setName] = useState("");
   const [questions, setQuestions] = useState([]);
+  const [totalPsScore, setTotalPsScore] = useState(0);
 
   function enteredName(name) {
     setName(name);
@@ -19,11 +22,19 @@ export default function NameContextProvider({ children }) {
     setQuestions(receivedResponseFromAPI.results);
   }
 
+  function setTotalScore(score, totalNoOfQuestion) {
+    const percentage = (score / totalNoOfQuestion) * 100;
+    setTotalPsScore(percentage);
+    console.log("Percent", totalPsScore);
+  }
+
   const value = {
     name: name,
     getEnteredname: enteredName,
     allQuestions: questions,
     setAllQuestions: gettingAllQuestions,
+    score: totalPsScore,
+    setTotalScore: setTotalScore,
   };
 
   return (
