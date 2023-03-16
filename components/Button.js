@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
     borderColor: "#FFF",
     padding: 8,
     textAlign: "center",
-    width: 150,
+    width: 180,
   },
   buttonPressed: {
     opacity: 0.5,

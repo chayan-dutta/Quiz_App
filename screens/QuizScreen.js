@@ -60,7 +60,6 @@ export default function QuizScreen({ navigation, route }) {
         console.log("Score", score);
         ctx.setTotalScore(score, noOfQuestionSelected);
         setLoadingIconVisibility(true);
-        setScore(0);
         setTimeout(() => {
           navigation.navigate("CertificateScreen");
         }, 2000);
